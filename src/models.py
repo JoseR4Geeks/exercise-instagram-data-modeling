@@ -1,32 +1,41 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+    userName = Column(String(255))
+    firstName =  Column(String(255))
+    lastName = Column(String(255))
+    profile_pic = Column(String(255))
+class Post(Base):
+    __tablename__ = 'Post'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    media = Column(String(255))
+    caption = Column(String(255))
+    user_poster_id = Column(Integer, ForeignKey('User.id'))
 
     def to_dict(self):
         return {}
+class Followers(Base):
+    __tablename__ = 'Followers'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('User.id'))
+    following_user_id = Column(Integer, ForeignKey('User.id'))
+class Comments(Base):
+    __tablename__ = 'Comments'
+    id = Column(Integer, primary_key=True)
+    commenter_id = Column(Integer, ForeignKey(User.id))
+    content = Column(String(255))
+    liked = Column(Boolean)
+
+
 
 ## Draw from SQLAlchemy base
 try:
